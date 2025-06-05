@@ -11,11 +11,13 @@ class VideoStreamManager:
         """
         Extract video metadata (like the stream URL) using yt-dlp.
 
-        Args:
-            video_url (str): The URL of the video
+        Parameters
+        ----------
+        - video_url (str): The URL of the video
 
-        Returns:
-            dict: A dictionary containing the stream URL
+        Returns
+        -------
+        dict: A dictionary containing the stream URL
         """
         ytdl = yt_dlp.YoutubeDL(self._yt_dlp_opts)
         video_info = ytdl.extract_info(video_url, download=False)
@@ -27,9 +29,10 @@ class VideoStreamManager:
         Read frames from a video stream and processes them using\
         a callback function.
 
-        Args:
-            stream_url (str): The URL of the video stream
-            frame_callback (function): A function to process each video frame
+        Parameters
+        ----------
+        - stream_url (str): The URL of the video stream
+        - frame_callback (function): A function to process each video frame
         """
         cv2_capture = cv2.VideoCapture(stream_url)
 
