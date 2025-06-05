@@ -16,7 +16,7 @@ class DisplayManager:
             cli_rows (int): Number of rows in the terminal
         """
         # Clear the terminal before displaying the frame
-        print("\003[H\003[J", end="")  # ANSI escape sequence to clear screen
+        print("\033[H\033[J", end="")  # ANSI escape sequence to clear screen
 
         # Print the ASCII frame
         print(
