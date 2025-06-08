@@ -20,7 +20,12 @@ class VideoStreamManager:
         dict: A dictionary containing the stream URL
         """
         ytdl = yt_dlp.YoutubeDL(self._yt_dlp_opts)
-        video_info = ytdl.extract_info(video_url, download=False)
+        try:
+            video_info = ytdl.extract_info(video_url, download=False)
+        except Exception as exc:  # Catch broad exceptions from yt_dlp
+            raise ValueError(
+                f"Unable to fetch metadata for URL {video_url}: {exc}"
+            ) from exc
 
         return {"stream_url": video_info["url"]}
 
@@ -35,12 +40,20 @@ class VideoStreamManager:
         - frame_callback (function): A function to process each video frame
         """
         cv2_capture = cv2.VideoCapture(stream_url)
+        if not cv2_capture.isOpened():
+            raise RuntimeError(f"Failed to open video stream: {stream_url}")
 
+        first_frame = True
         while True:
             ret, frame = cv2_capture.read()
             if not ret or frame is None:
+                if first_frame:
+                    raise RuntimeError(
+                        f"Failed to read video frames from stream: {stream_url}"
+                    )
                 break
 
+            first_frame = False
             frame_callback(frame)
 
         cv2_capture.release()
